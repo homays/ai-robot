@@ -1,2 +1,13 @@
 server:
   port: 8080
+
+spring:
+  ai:
+    deepseek:
+      api-key: sk-31d6c9da6992418d86e558d47cab09f3 # 填写 DeepSeek Api Key, 改成你自己的
+      base-url: https://api.deepseek.com # DeepSeek 的请求 URL, 可不填，默认值为 api.deepseek.com
+      chat:
+        options:
+          model: deepseek-chat # 使用哪个模型
+          temperature: 0.8 # 温度值
+
