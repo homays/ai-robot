@@ -1,14 +1,25 @@
 package com.ymkx.ai.robot.config;
 
 import com.ymkx.ai.robot.advisor.MyLoggerAdvisor;
+import jakarta.annotation.Resource;
+import org.apache.logging.log4j.message.Message;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.deepseek.DeepSeekChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * ChatClient 配置
+ * @author ymkx
+ */
 @Configuration
 public class ChatClientConfig {
+
+    @Resource
+    private ChatMemory chatMemory;
 
     /**
      * 初始化 ChatClient 客户端
@@ -16,7 +27,11 @@ public class ChatClientConfig {
     @Bean
     public ChatClient chatClient(DeepSeekChatModel chatModel) {
         return ChatClient.builder(chatModel)
-                .defaultAdvisors(new SimpleLoggerAdvisor(), new MyLoggerAdvisor())
+                .defaultSystem("请你扮演一名用户中心智能客服人员")
+                .defaultAdvisors(new SimpleLoggerAdvisor(),
+                        //new MyLoggerAdvisor()
+                        MessageChatMemoryAdvisor.builder(chatMemory).build()
+                )
                 .build();
     }
 
